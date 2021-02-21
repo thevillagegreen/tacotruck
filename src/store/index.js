@@ -10,13 +10,14 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     statusInterval: 0.5,
-    tacoCount: 420,
+    tacoCount: 1000,
     tacosPerInterval: 0,
     tacoStore: [
-      { name: 'chef', cost: '250', tacosPerInterval: 1, owned: 0 },
-      { name: 'cart', cost: '250', tacosPerInterval: 5, owned: 0 },
-      { name: 'truck', cost: '250', tacosPerInterval: 20, owned: 0 }
-    ]
+      { name: 'chef', cost: '100', tacosPerInterval: 1, owned: 0 },
+      { name: 'cart', cost: '500', tacosPerInterval: 5, owned: 0 },
+      { name: 'truck', cost: '1000', tacosPerInterval: 20, owned: 0 }
+    ],
+    countAfterPurchase: 0
   },
   mutations: {
     incrementTacoCount (state) {
@@ -29,8 +30,14 @@ export default new Vuex.Store({
       var storeObj = state.tacoStore.find(obj => {
         return obj.name === purchaseName
       })
-      storeObj.owned++
-      state.tacosPerInterval = state.tacosPerInterval + storeObj.tacosPerInterval
+      state.countAfterPurchase = state.tacoCount - storeObj.cost
+      if (state.countAfterPurchase >= 0) {
+        storeObj.owned++
+        state.tacosPerInterval = state.tacosPerInterval + storeObj.tacosPerInterval
+        state.tacoCount = state.countAfterPurchase
+      } else {
+        console.log('insufficient funds, would be left with: ' + state.countAfterPurchase)
+      }
     }
   },
   actions: {

@@ -18,6 +18,15 @@ export default {
     TacoClicker,
     GameStatus,
     TacoStore
+  },
+  mounted () {
+    var intervalID = window.setInterval(this.tacoRunner, 500)
+    console.log(intervalID)
+  },
+  methods: {
+    tacoRunner () {
+      this.$store.dispatch('addTacos')
+    }
   }
 }
 
