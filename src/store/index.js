@@ -32,7 +32,13 @@ export default new Vuex.Store({
       state.tacoCount++
     },
     addTacos (state) {
-      state.tacoCount = Math.round(state.tacoCount + (state.tacosPerInterval * state.statusInterval))
+      var tacosFromCapital = 0
+      state.tacoStore.forEach(store => {
+        if (store.owned >= 1) {
+          tacosFromCapital = tacosFromCapital + store.tacosPerInterval
+        }
+      })
+      state.tacoCount = Math.round(state.tacoCount + (tacosFromCapital * state.statusInterval))
     },
     purchaseCapital (state, purchaseName) {
       var storeObj = state.tacoStore.find(obj => {
@@ -41,8 +47,9 @@ export default new Vuex.Store({
       state.countAfterPurchase = state.tacoCount - storeObj.cost
       if (state.countAfterPurchase >= 0) {
         storeObj.owned++
-        state.tacosPerInterval = state.tacosPerInterval + storeObj.tacosPerInterval
+        storeObj.tacosPerInterval++
         state.tacoCount = state.countAfterPurchase
+        storeObj.cost = Math.round(storeObj.cost + (storeObj.cost * storeObj.nextCostFactor))
       } else {
         console.log('insufficient funds, would be left with: ' + state.countAfterPurchase)
       }
@@ -69,16 +76,6 @@ export default new Vuex.Store({
       } else {
         console.log('insufficient funds, would be left with: ' + state.countAfterPurchase)
       }
-      // else, increase interval for given name
-
-      // state.countAfterPurchase = state.tacoCount - storeObj.cost
-      // if (state.countAfterPurchase >= 0) {
-      //   storeObj.owned++
-      //   state.tacosPerInterval = state.tacosPerInterval + storeObj.tacosPerInterval
-      //   state.tacoCount = state.countAfterPurchase
-      // } else {
-      //   console.log('insufficient funds, would be left with: ' + state.countAfterPurchase)
-      // }
     }
   },
   actions: {
