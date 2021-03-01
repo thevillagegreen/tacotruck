@@ -1,7 +1,7 @@
 <template>
   <div class="taco-clicker-container">
     <h1>Taco Clicker</h1>
-    <button id="taco-button" @click="clickTaco">Make Taco</button>
+    <button id="taco-button" @click="clickTaco">Make Taco ({{ clickMul }})</button>
   </div>
 </template>
 
@@ -12,6 +12,11 @@ export default {
   methods: {
     clickTaco () {
       this.$store.dispatch('incrementTacoCount')
+    }
+  },
+  computed: {
+    clickMul: function () {
+      return this.$store.state.clickMultiplier
     }
   }
 }
